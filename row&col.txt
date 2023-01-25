@@ -1,0 +1,164 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Row & Column'),
+          centerTitle: true,
+        ),
+        body: RowCol(),
+      ),
+    );
+  }
+}
+
+class RowCol extends StatefulWidget {
+  const RowCol({super.key});
+
+  @override
+  State<RowCol> createState() => _RowColState();
+}
+
+class _RowColState extends State<RowCol> {
+  static const KElement = [
+    Icon(
+      Icons.stars,
+      size: 50.0,
+    ),
+    Icon(
+      Icons.stars,
+      size: 100.0,
+    ),
+    Icon(
+      Icons.stars,
+      size: 50.0,
+    )
+  ];
+  bool _isRow = true;
+  MainAxisSize _mainAxisSize = MainAxisSize.max;
+  MainAxisAlignment _mainAxisAlignment = MainAxisAlignment.start;
+  CrossAxisAlignment _crossAxisAlignment = CrossAxisAlignment.start;
+  @override
+  Widget build(BuildContext context) {
+    final _appbarButtons = _getBottomBar();
+    return Scaffold(
+      body: _buildBody(),
+      bottomNavigationBar: _appbarButtons,
+    );
+  }
+
+  Widget _buildBody() => Container(
+        color: Colors.blueAccent,
+        child: _isRow
+            ? Row(
+                mainAxisAlignment: _mainAxisAlignment,
+                crossAxisAlignment: _crossAxisAlignment,
+                mainAxisSize: _mainAxisSize,
+                children: KElement,
+              )
+            : Column(
+                mainAxisAlignment: _mainAxisAlignment,
+                crossAxisAlignment: _crossAxisAlignment,
+                mainAxisSize: _mainAxisSize,
+                children: KElement,
+              ),
+      );
+  Widget _getBottomBar() {
+    return Material(
+      color: Theme.of(context).primaryColorLight,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              Row(
+                children: [
+                  Radio(
+                    value: true,
+                    groupValue: this._isRow,
+                    onChanged: (bool? value) {
+                      if (value != null) setState(() => this._isRow = value);
+                    },
+                  ),
+                  Text("Row"),
+                ],
+              ),
+              Row(
+                children: [
+                  Radio(
+                      value: false,
+                      groupValue: this._isRow,
+                      onChanged: (bool? value) {
+                        if (value != null) setState(() => this._isRow = value);
+                      }),
+                  Text("Column"),
+                ],
+              )
+            ],
+          ),
+          ListTile(
+            title: Text('mainAxissize'),
+            trailing: DropdownButton<MainAxisSize>(
+              value: _mainAxisSize,
+              onChanged: (MainAxisSize? newVal) {
+                if (newVal != null) {
+                  setState(() => this._mainAxisSize = newVal);
+                }
+              },
+              items: MainAxisSize.values
+                  .map((MainAxisSize val) => DropdownMenuItem(
+                      value: val,
+                      child: Text(
+                          val.toString().substring('MainAxisSize'.length))))
+                  .toList(),
+            ),
+          ),
+          ListTile(
+            title: Text('MainAxisAligmnet'),
+            trailing: DropdownButton<MainAxisAlignment>(
+              value: _mainAxisAlignment,
+              onChanged: (MainAxisAlignment? newVal) {
+                if (newVal != null) {
+                  setState(() => this._mainAxisAlignment = newVal);
+                }
+              },
+              items: MainAxisAlignment.values
+                  .map((MainAxisAlignment val) => DropdownMenuItem(
+                      value: val,
+                      child: Text(
+                          val.toString().substring('MainAxisAligment'.length))))
+                  .toList(),
+            ),
+          ),
+          ListTile(
+            title: Text('CrossAxisAligment'),
+            trailing: DropdownButton<CrossAxisAlignment>(
+              value: _crossAxisAlignment,
+              onChanged: (CrossAxisAlignment? newVal) {
+                if (newVal != null) {
+                  setState(() => this._crossAxisAlignment = newVal);
+                }
+              },
+              items: CrossAxisAlignment.values
+                  .map((CrossAxisAlignment val) => DropdownMenuItem(
+                      value: val,
+                      child: Text(val
+                          .toString()
+                          .substring('CrossAxisAligment'.length))))
+                  .toList(),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
